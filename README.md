@@ -22,7 +22,7 @@ pip install .
 
 ## Usage
 
-The core component is the `Heartbeats` class.
+The core component is the `Heartbeat` class.
 The user defines a window period (`window_size`) that specifies a sliding window length over which performance is computed.
 Users may optionally specify other fields to compute sums and rates for.
 
