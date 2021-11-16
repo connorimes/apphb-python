@@ -1,5 +1,7 @@
 # Python Application Heartbeats
 
+![Documentation Status](https://readthedocs.org/projects/apphb-python/badge/?version=latest)](https://apphb-python.readthedocs.io/en/latest/?badge=latest)
+
 A Python application-level heartbeats interface.
 
 
