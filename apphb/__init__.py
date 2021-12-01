@@ -104,28 +104,28 @@ class Heartbeat:
     compute seconds, and multiply heart rates by 1 billion to compute heartbeats per second.
     Similarly, custom fields might need to be normalized w.r.t. their units, and in the case of
     rates, w.r.t. the ratio between their units and the time units.
+
+    Parameters
+    ----------
+    window_size : int
+        The heartbeat window period > 0.
+    time_shape : int, optional
+        The shape to be used for the ``heartbeat()`` ``time`` parameter.
+        The only acceptable values are 1 and 2.
+        1 implies using elapsed time, e.g., ``time=(elapsed_time,)``.
+        2 implies using start and end times, e.g., ``time=(start_time, end_time)``.
+    fields_shape : Tuple[int, ...], optional
+        The shape that will be used if supplying additional fields with each heartbeat.
+        The only acceptable values in the tuple are 1 and 2.
+        For example, if the ``heartbeat()`` ``fields`` param is going to be:
+        ``fields=[(total_value_1,), (start_value_2, end_value_2)]``
+        then the shape would be:
+        ``fields_shape=(1, 2)``
     """
 
     def __init__(self, window_size: int, time_shape: int=1, fields_shape: Tuple[int, ...]=None):
         """
         Initialize a heartbeat instance.
-
-        Parameters
-        ----------
-        window_size : int
-            The heartbeat window period > 0.
-        time_shape : int, optional
-            The shape to be used for the ``heartbeat()`` ``time`` parameter.
-            The only acceptable values are 1 and 2.
-            1 implies using elapsed time, e.g., ``time=(elapsed_time,)``.
-            2 implies using start and end times, e.g., ``time=(start_time, end_time)``.
-        fields_shape : Tuple[int, ...], optional
-            The shape that will be used if supplying additional fields with each heartbeat.
-            The only acceptable values in the tuple are 1 and 2.
-            For example, if the ``heartbeat()`` ``fields`` param is going to be:
-            ``fields=[(total_value_1,), (start_value_2, end_value_2)]``
-            then the shape would be:
-            ``fields_shape=(1, 2)``
         """
         if window_size <= 0:
             raise ValueError('window_size must be > 0')

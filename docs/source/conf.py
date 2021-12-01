@@ -36,10 +36,6 @@ extensions = [
     'sphinx.ext.napoleon',
 ]
 
-autodoc_default_options = {
-    'special-members': '__init__',
-}
-
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
 }
