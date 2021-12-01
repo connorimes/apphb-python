@@ -61,8 +61,10 @@ def get_log_header(hbt: Heartbeat, time_name: str='Time', heartrate_name: str='H
                 hdrs.append(prefix + ' ' + suffix)
     return hdrs
 
-def get_log_record(hbr: HeartbeatRecord, norm: List[HeartbeatFieldCount]=None,
-                   rate_norm: List[HeartbeatFieldRate]=None) -> List[HeartbeatRecordData]:
+def get_log_record(hbr: HeartbeatRecord, time_norm: HeartbeatFieldCount=None,
+                   heartrate_norm: HeartbeatFieldRate=None,
+                   field_norms: List[HeartbeatFieldCount]=None,
+                   field_rate_norms: List[HeartbeatFieldRate]=None) -> List[HeartbeatRecordData]:
     """
     Get a heartbeat record for logging.
 
@@ -70,10 +72,17 @@ def get_log_record(hbr: HeartbeatRecord, norm: List[HeartbeatFieldCount]=None,
     ----------
     hbr : HeartbeatRecord
         The heartbeat record to be logged.
-    norm : List[HeartbeatFieldCount], optional
-        The normalization factor for val, glbl, wndw, and inst values.
-    rate_norm : List[HeartbeatFieldRate], optional
-        The normalization factor for glbl_rate, wndw_rate, and inst_rate values.
+    time_norm : HeartbeatFieldCount, optional
+        The normalization factor for the time field's val, glbl, wndw, and inst values.
+    heartrate_norm : HeartbeatFieldRate, optional
+        The normalization factor for the time field's glbl_rate, wndw_rate, and inst_rate values.
+    field_norms : List[HeartbeatFieldCount], optional
+        The normalization factor for user-specified fields' val, glbl, wndw, and inst values.
+        The entire parameter or individual list elements may be None.
+    field_rate_norms : List[HeartbeatFieldRate], optional
+        The normalization factor for user-specified fields' glbl_rate, wndw_rate, and inst_rate
+        values.
+        The entire parameter or individual list elements may be None.
 
     Returns
     -------
@@ -81,10 +90,12 @@ def get_log_record(hbr: HeartbeatRecord, norm: List[HeartbeatFieldCount]=None,
         The heartbeat record data.
     """
     values = [hbr.ident, hbr.tag]
-    if norm is None:
-        norm = []
-    if rate_norm is None:
-        rate_norm = []
+    norm = [time_norm]
+    rate_norm = [heartrate_norm]
+    if field_norms is not None:
+        norm.extend(field_norms)
+    if field_rate_norms is not None:
+        rate_norm.extend(field_rate_norms)
     # time field + custom fields + 1 (for excluded range stop value)
     total_range = 1 + len(hbr.field_records) + 1
     norm.extend([None for _ in range(total_range - len(norm))])
@@ -95,8 +106,11 @@ def get_log_record(hbr: HeartbeatRecord, norm: List[HeartbeatFieldCount]=None,
         values.extend(dataclasses.astuple(norm_rec)[1:])
     return values
 
-def get_log_records(hbt: Heartbeat, count: int=None, norm: List[HeartbeatFieldCount]=None,
-                    rate_norm: List[HeartbeatFieldRate]=None) -> List[List[HeartbeatRecordData]]:
+def get_log_records(hbt: Heartbeat, count: int=None, time_norm: HeartbeatFieldCount=None,
+                    heartrate_norm: HeartbeatFieldRate=None,
+                    field_norms: List[HeartbeatFieldCount]=None,
+                    field_rate_norms: List[HeartbeatFieldRate]=None) -> \
+    List[List[HeartbeatRecordData]]:
     """
     Get heartbeat records for logging.
 
@@ -107,10 +121,17 @@ def get_log_records(hbt: Heartbeat, count: int=None, norm: List[HeartbeatFieldCo
     count : int, optional
         The number of historical records to get, where 0 <= count <= window_size.
         If None, returns the previous window history.
-    norm : List[HeartbeatFieldCount], optional
-        The normalization factor for val, glbl, wndw, and inst values.
-    rate_norm : List[HeartbeatFieldRate], optional
-        The normalization factor for glbl_rate, wndw_rate, and inst_rate values.
+    time_norm : HeartbeatFieldCount, optional
+        The normalization factor for the time field's val, glbl, wndw, and inst values.
+    heartrate_norm : HeartbeatFieldRate, optional
+        The normalization factor for the time field's glbl_rate, wndw_rate, and inst_rate values.
+    field_norms : List[HeartbeatFieldCount], optional
+        The normalization factor for user-specified fields' val, glbl, wndw, and inst values.
+        The entire parameter or individual list elements may be None.
+    field_rate_norms : List[HeartbeatFieldRate], optional
+        The normalization factor for user-specified fields' glbl_rate, wndw_rate, and inst_rate
+        values.
+        The entire parameter or individual list elements may be None.
 
     Returns
     -------
@@ -123,4 +144,6 @@ def get_log_records(hbt: Heartbeat, count: int=None, norm: List[HeartbeatFieldCo
         raise ValueError('count must be in range: 0 <= count <= window_size')
     # this "range" allows count=window_size+1 (per Heartbeat.get_record) so we need the check above
     recs = [hbt.get_record(off=off) for off in range(-count + 1, 1)]
-    return [get_log_record(r, norm=norm, rate_norm=rate_norm) for r in recs]
+    return [get_log_record(r, time_norm=time_norm, heartrate_norm=heartrate_norm,
+                           field_norms=field_norms, field_rate_norms=field_rate_norms)
+            for r in recs]

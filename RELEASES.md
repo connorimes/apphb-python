@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Publish documentation on [Read the Docs](https://apphb-python.readthedocs.io/).
+- Optional parameters in `logging.get_log_record` and `logging.get_log_records`: `time_norm`, `heartrate_norm`, `field_norms`, and `field_rate_norms`.
+
+### Changed
+- Optional parameter design in `logging.get_log_record` and `logging.get_log_records` to separate time-specific values, which aligns with the design of other submodule functions and class methods.
+
+### Removed
+- Optional parameters in `logging.get_log_record` and `logging.get_log_records`: `norm` and `rate_norm`.
 
 
 ## [0.0.1] - 2021-11-15

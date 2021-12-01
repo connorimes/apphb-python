@@ -96,7 +96,8 @@ class TestLogging(unittest.TestCase):
                               field_records=[HeartbeatFieldRecord(val=(1, 2), glbl=3, wndw=4,
                                                                   inst=5, glbl_rate=6, wndw_rate=7,
                                                                   inst_rate=8)])
-        rec = logging.get_log_record(hbr, norm=[2, 0.5], rate_norm=[0.5, 2])
+        rec = logging.get_log_record(hbr, time_norm=2, heartrate_norm=0.5, field_norms=[0.5],
+                                     field_rate_norms=[2])
         self.assertAlmostEqual(rec, [1, 2,
                                      0, 2, 6, 4, 2, 0.5, 1, 0.5,
                                      0.5, 1, 1.5, 2, 2.5, 12, 14, 16])
