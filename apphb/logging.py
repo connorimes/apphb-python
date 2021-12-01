@@ -106,6 +106,7 @@ def get_log_record(hbr: HeartbeatRecord, time_norm: HeartbeatFieldCount=None,
         values.extend(dataclasses.astuple(norm_rec)[1:])
     return values
 
+# pylint: disable=R0913
 def get_log_records(hbt: Heartbeat, count: int=None, time_norm: HeartbeatFieldCount=None,
                     heartrate_norm: HeartbeatFieldRate=None,
                     field_norms: List[HeartbeatFieldCount]=None,
@@ -143,6 +144,7 @@ def get_log_records(hbt: Heartbeat, count: int=None, time_norm: HeartbeatFieldCo
     if count < 0 or count > hbt.window_size:
         raise ValueError('count must be in range: 0 <= count <= window_size')
     # this "range" allows count=window_size+1 (per Heartbeat.get_record) so we need the check above
+    # pylint: disable=E1130 # (count will not be NoneType here)
     recs = [hbt.get_record(off=off) for off in range(-count + 1, 1)]
     return [get_log_record(r, time_norm=time_norm, heartrate_norm=heartrate_norm,
                            field_norms=field_norms, field_rate_norms=field_rate_norms)
