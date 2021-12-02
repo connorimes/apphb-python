@@ -41,9 +41,9 @@ class HeartbeatFieldRecord:
         Parameters
         ----------
         norm : HeartbeatFieldCount, optional
-            The normalization factor for ``val`` tuple values, ``glbl``, ``wndw``, and ``inst``.
+            The normalization factor for `val` tuple values, `glbl`, `wndw`, and `inst`.
         rate_norm : HeartbeatFieldRate, optional
-            The normalization factor for ``glbl_rate``, ``wndw_rate``, and ``inst_rate``.
+            The normalization factor for `glbl_rate`, `wndw_rate`, and `inst_rate`.
 
         Returns
         -------
@@ -65,7 +65,7 @@ class HeartbeatFieldRecord:
 @dataclass
 class HeartbeatRecord:
     """
-    Contains identifiers and HeartbeatFieldRecord instances for a heartbeat's fields.
+    Contains identifiers and `HeartbeatFieldRecord` instances for a heartbeat's fields.
     """
     ident: HeartbeatIdentifier = 0
     """The record's (preferably) unique identifier."""
@@ -75,9 +75,9 @@ class HeartbeatRecord:
     """
     The record's time field.
 
-    The ``time`` field is a special case.
+    The `time` field is a special case.
     Other fields depend on it for computing their rates.
-    In contrast, ``time`` rates are computed as heartbeat rates.
+    In contrast, `time` rates are computed as heartbeat rates.
     """
     field_records: List[HeartbeatFieldRecord] = dataclasses.field(default_factory=list)
     """The record's other fields."""
@@ -98,6 +98,9 @@ class Heartbeat:
     Notes
     -----
     It may be desirable to capture and store metrics using high-precision units.
+    For example, consider using a monotonic clock with high granularity like
+    :meth:`time.monotonic_ns()`.
+
     Because the API doesn't enforce particular units, users might need to normalize when retrieving
     heartbeat data.
     For example, if time is provided in nanoseconds, divide values and counts by 1 billion to
@@ -108,19 +111,19 @@ class Heartbeat:
     Parameters
     ----------
     window_size : int
-        The heartbeat window period > 0.
+        The heartbeat window period, where ``window_size > 0``.
     time_shape : int, optional
-        The shape to be used for the ``heartbeat()`` ``time`` parameter.
-        The only acceptable values are 1 and 2.
-        1 implies using elapsed time, e.g., ``time=(elapsed_time,)``.
-        2 implies using start and end times, e.g., ``time=(start_time, end_time)``.
+        The shape to be used for the :meth:`heartbeat` `time` parameter.
+        The only acceptable values are ``1`` and ``2``.
+        ``1`` implies using elapsed time, e.g., ``time=(elapsed_time,)``.
+        ``2`` implies using start and end times, e.g., ``time=(start_time, end_time)``.
     fields_shape : Tuple[int, ...], optional
         The shape that will be used if supplying additional fields with each heartbeat.
-        The only acceptable values in the tuple are 1 and 2.
-        For example, if the ``heartbeat()`` ``fields`` param is going to be:
-        ``fields=[(total_value_1,), (start_value_2, end_value_2)]``
+        The only acceptable values in the tuple are ``1`` and ``2``.
+        For example, if the :meth:`heartbeat` `fields` param is going to be:
+        ``fields=[(total_value_1,), (start_value_2, end_value_2)]``,
         then the shape would be:
-        ``fields_shape=(1, 2)``
+        ``fields_shape=(1, 2)``.
     """
 
     def __init__(self, window_size: int, time_shape: int=1, fields_shape: Tuple[int, ...]=None):
@@ -174,18 +177,16 @@ class Heartbeat:
         Parameters
         ----------
         tag : HeartbeatIdentifier
-            A user-specified identifier - most likely an unique int value.
+            A user-specified identifier - most likely a unique `int` value.
         time : HeartbeatFieldValue
-            The start and end times for the record.
-            Recommend using a monotonic clock with high granularity, e.g., ``time.monotonic_ns()``.
+            The elapsed/total or the start and end times for the record, depending on `time_shape`
+            specified during initialization.
+            However specified, the elapsed time must be positive, i.e., the following must hold:
+            ``len(time) == 1 and time[0] > 0`` or
+            ``len(time) == 2 and (time[1] - time[0]) > 0``.
         fields : Tuple[HeartbeatFieldValue, ...], optional
-            The start and end values for each field specified during initialization.
-
-        Raises
-        ------
-        ValueError
-            If the shape of time and fields parameters are not the same as specified during init.
-            If the elapsed time is <= 0.
+            The elapsed/total or start and end values for each field, depending on `fields_shape`
+            specified during initialization.
         """
         # check and convert all parameters before modifying internal state
         if len(time) != self._time_shape:
@@ -246,16 +247,12 @@ class Heartbeat:
         ----------
         off : int, optional
             A negative offset relative to the last heartbeat to get older data.
+            The value must be in range: ``-window_size <= off <= 0``.
 
         Returns
         -------
         HeartbeatRecord
             The desired record.
-
-        Raises
-        ------
-        ValueError
-            If offset is not in range: -window_size <= off <= 0
 
         Notes
         -----
@@ -277,19 +274,15 @@ class Heartbeat:
         ----------
         off : int, optional
             A negative offset relative to the last heartbeat to get older data.
+            The value must be in range: ``-window_size <= off <= 0``.
         fld : int, optional
-            The HeartbeatRecord field.
-            If None, the time field is used, otherwise field_records[fld] is used.
+            The `HeartbeatRecord` field.
+            If `None`, the `time` field is used, otherwise ``field_records[fld]`` is used.
 
         Returns
         -------
         HeartbeatFieldValue
             The requested value.
-
-        Raises
-        ------
-        ValueError
-            If offset is not in range: -window_size <= off <= 0
         """
         hbfr = self._to_field_record(off, fld)
         return hbfr.val
@@ -302,19 +295,15 @@ class Heartbeat:
         ----------
         off : int, optional
             A negative offset relative to the last heartbeat to get older data.
+            The value must be in range: ``-window_size <= off <= 0``.
         fld : int, optional
-            The HeartbeatRecord field.
-            If None, the time field is used, otherwise field_records[fld] is used.
+            The `HeartbeatRecord` field.
+            If `None`, the `time` field is used, otherwise ``field_records[fld]`` is used.
 
         Returns
         -------
         HeartbeatFieldCount
             The requested global count.
-
-        Raises
-        ------
-        ValueError
-            If offset is not in range: -window_size <= off <= 0
         """
         hbfr = self._to_field_record(off, fld)
         return hbfr.glbl
@@ -327,19 +316,15 @@ class Heartbeat:
         ----------
         off : int, optional
             A negative offset relative to the last heartbeat to get older data.
+            The value must be in range: ``-window_size <= off <= 0``.
         fld : int, optional
-            The HeartbeatRecord field.
-            If None, the time field is used, otherwise field_records[fld] is used.
+            The `HeartbeatRecord` field.
+            If `None`, the `time` field is used, otherwise ``field_records[fld]`` is used.
 
         Returns
         -------
         HeartbeatFieldCount
             The requested window count.
-
-        Raises
-        ------
-        ValueError
-            If offset is not in range: -window_size <= off <= 0
         """
         hbfr = self._to_field_record(off, fld)
         return hbfr.wndw
@@ -352,19 +337,15 @@ class Heartbeat:
         ----------
         off : int, optional
             A negative offset relative to the last heartbeat to get older data.
+            The value must be in range: ``-window_size <= off <= 0``.
         fld : int, optional
-            The HeartbeatRecord field.
-            If None, the time field is used, otherwise field_records[fld] is used.
+            The `HeartbeatRecord` field.
+            If `None`, the `time` field is used, otherwise ``field_records[fld]`` is used.
 
         Returns
         -------
         HeartbeatFieldCount
             The requested instant count.
-
-        Raises
-        ------
-        ValueError
-            If offset is not in range: -window_size <= off <= 0
         """
         hbfr = self._to_field_record(off, fld)
         return hbfr.inst
@@ -377,19 +358,15 @@ class Heartbeat:
         ----------
         off : int, optional
             A negative offset relative to the last heartbeat to get older data.
+            The value must be in range: ``-window_size <= off <= 0``.
         fld : int, optional
-            The HeartbeatRecord field.
-            If None, the time field is used, otherwise field_records[fld] is used.
+            The `HeartbeatRecord` field.
+            If `None`, the `time` field is used, otherwise ``field_records[fld]`` is used.
 
         Returns
         -------
         HeartbeatFieldCount
             The requested global rate.
-
-        Raises
-        ------
-        ValueError
-            If offset is not in range: -window_size <= off <= 0
         """
         hbfr = self._to_field_record(off, fld)
         return hbfr.glbl_rate
@@ -402,19 +379,15 @@ class Heartbeat:
         ----------
         off : int, optional
             A negative offset relative to the last heartbeat to get older data.
+            The value must be in range: ``-window_size <= off <= 0``.
         fld : int, optional
-            The HeartbeatRecord field.
-            If None, the time field is used, otherwise field_records[fld] is used.
+            The `HeartbeatRecord` field.
+            If `None`, the `time` field is used, otherwise ``field_records[fld]`` is used.
 
         Returns
         -------
         HeartbeatFieldCount
             The requested window rate.
-
-        Raises
-        ------
-        ValueError
-            If offset is not in range: -window_size <= off <= 0
         """
         hbfr = self._to_field_record(off, fld)
         return hbfr.wndw_rate
@@ -427,19 +400,15 @@ class Heartbeat:
         ----------
         off : int, optional
             A negative offset relative to the last heartbeat to get older data.
+            The value must be in range: ``-window_size <= off <= 0``.
         fld : int, optional
-            The HeartbeatRecord field.
-            If None, the time field is used, otherwise field_records[fld] is used.
+            The `HeartbeatRecord` field.
+            If `None`, the `time` field is used, otherwise ``field_records[fld]`` is used.
 
         Returns
         -------
         HeartbeatFieldCount
             The requested instant rate.
-
-        Raises
-        ------
-        ValueError
-            If offset is not in range: -window_size <= off <= 0
         """
         hbfr = self._to_field_record(off, fld)
         return hbfr.inst_rate

@@ -12,7 +12,7 @@ def get_log_header(hbt: Heartbeat, time_name: str='Time', heartrate_name: str='H
     The first entries are always 'Heartbeat' and 'Tag'.
     'Heartbeat' is the internal identifier.
     'Tag' is the user-specified identifier.
-    Then for each field, including 'Time':
+    Then for each field, including `time`:
 
         The field shape determines whether one or two entries will be used for the value, where two
         columns implies Start and End values.
@@ -26,15 +26,15 @@ def get_log_header(hbt: Heartbeat, time_name: str='Time', heartrate_name: str='H
     hbt : Heartbeat
         The heartbeat instance.
     time_name : str, optional
-        Custom name for the time field, e.g., to specify units.
+        Custom name for the `time` field, e.g., to specify units.
     heartrate_name : str, optional
-        Custom name for the heartrate (rates for the time field), e.g., to specify units.
+        Custom name for the heartrate (rates for the `time` field), e.g., to specify units.
     field_names : List[str], optional
         Names for user-specified fields.
     field_rate_names : List[str], optional
         Rate names for user-specified fields.
         If not specified, the corresponding field name is used with 'Rate' appended to it.
-        If len(field_rate_names) < len(field_names), 'Rate' is appended to remaining names.
+        If ``len(field_rate_names) < len(field_names)``, 'Rate' is appended to remaining names.
 
     Returns
     -------
@@ -73,16 +73,18 @@ def get_log_record(hbr: HeartbeatRecord, time_norm: HeartbeatFieldCount=None,
     hbr : HeartbeatRecord
         The heartbeat record to be logged.
     time_norm : HeartbeatFieldCount, optional
-        The normalization factor for the time field's val, glbl, wndw, and inst values.
+        The normalization factor for the `time` field's `val`, `glbl`, `wndw`, and `inst` values.
     heartrate_norm : HeartbeatFieldRate, optional
-        The normalization factor for the time field's glbl_rate, wndw_rate, and inst_rate values.
-    field_norms : List[HeartbeatFieldCount], optional
-        The normalization factor for user-specified fields' val, glbl, wndw, and inst values.
-        The entire parameter or individual list elements may be None.
-    field_rate_norms : List[HeartbeatFieldRate], optional
-        The normalization factor for user-specified fields' glbl_rate, wndw_rate, and inst_rate
+        The normalization factor for the `time` field's `glbl_rate`, `wndw_rate`, and `inst_rate`
         values.
-        The entire parameter or individual list elements may be None.
+    field_norms : List[HeartbeatFieldCount], optional
+        The normalization factor for user-specified fields' `val`, `glbl`, `wndw`, and `inst`
+        values.
+        The entire parameter or individual list elements may be `None`.
+    field_rate_norms : List[HeartbeatFieldRate], optional
+        The normalization factor for user-specified fields' `glbl_rate`, `wndw_rate`, and
+        `inst_rate` values.
+        The entire parameter or individual list elements may be `None`.
 
     Returns
     -------
@@ -120,24 +122,26 @@ def get_log_records(hbt: Heartbeat, count: int=None, time_norm: HeartbeatFieldCo
     hbt : Heartbeat
         The heartbeat to be logged.
     count : int, optional
-        The number of historical records to get, where 0 <= count <= window_size.
-        If None, returns the previous window history.
+        The number of historical records to get, where ``0 <= count <= window_size``.
+        If `None`, returns the previous window history.
     time_norm : HeartbeatFieldCount, optional
-        The normalization factor for the time field's val, glbl, wndw, and inst values.
+        The normalization factor for the `time` field's `val`, `glbl`, `wndw`, and `inst` values.
     heartrate_norm : HeartbeatFieldRate, optional
-        The normalization factor for the time field's glbl_rate, wndw_rate, and inst_rate values.
-    field_norms : List[HeartbeatFieldCount], optional
-        The normalization factor for user-specified fields' val, glbl, wndw, and inst values.
-        The entire parameter or individual list elements may be None.
-    field_rate_norms : List[HeartbeatFieldRate], optional
-        The normalization factor for user-specified fields' glbl_rate, wndw_rate, and inst_rate
+        The normalization factor for the `time` field's `glbl_rate`, `wndw_rate`, and `inst_rate`
         values.
-        The entire parameter or individual list elements may be None.
+    field_norms : List[HeartbeatFieldCount], optional
+        The normalization factor for user-specified fields' `val`, `glbl`, `wndw`, and `inst`
+        values.
+        The entire parameter or individual list elements may be `None`.
+    field_rate_norms : List[HeartbeatFieldRate], optional
+        The normalization factor for user-specified fields' `glbl_rate`, `wndw_rate`, and
+        `inst_rate` values.
+        The entire parameter or individual list elements may be `None`.
 
     Returns
     -------
     List[List[HeartbeatRecordData]]
-        The heartbeat record data.
+        The heartbeat records data.
     """
     if count is None:
         count = hbt.window_size
