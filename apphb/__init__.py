@@ -3,12 +3,18 @@ import dataclasses
 from dataclasses import dataclass
 from typing import List, Tuple, Union
 
+#: Type for heartbeat field record `val` field.
 HeartbeatFieldValue = Union[Tuple[int], Tuple[float], Tuple[int, int], Tuple[float, float]]
+#: Type for heartbeat field record `glbl`, `wndw`, and `inst` fields.
 HeartbeatFieldCount = Union[int, float]
+#: Type for heartbeat field record `glbl_rate`, `wndw_rate`, and `inst_rate` fields.
 HeartbeatFieldRate = float
+#: Type for heartbeat record `ident` field.
 HeartbeatIdentifier = Union[int, str]
 
+#: Union of types in a heartbeat field record.
 HeartbeatFieldRecordData = Union[HeartbeatFieldValue, HeartbeatFieldCount, HeartbeatFieldRate]
+#: Union of types in a heartbeat record.
 HeartbeatRecordData = Union[HeartbeatFieldRecordData, HeartbeatIdentifier]
 
 @dataclass
