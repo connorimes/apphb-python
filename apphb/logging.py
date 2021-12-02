@@ -41,17 +41,17 @@ def get_log_header(hbt: Heartbeat, time_name: str='Time', heartrate_name: str='H
     List[str]
         The list of names for all identifiers and fields in a heartbeat record.
     """
-    if field_names is None:
-        field_names = []
-    if field_rate_names is None:
-        field_rate_names = []
+    names = [str(time_name)]
+    rate_names = [str(heartrate_name)]
+    if field_names is not None:
+        names.extend(field_names)
+    if field_rate_names is not None:
+        rate_names.extend(field_rate_names)
     field_shapes = (hbt.time_shape,) + hbt.fields_shape
-    field_names.insert(0, str(time_name))
-    field_names.extend(['Field ' + str(i) for i in range(len(field_names), len(field_shapes))])
-    field_rate_names.insert(0, str(heartrate_name))
-    field_rate_names.extend([n + ' Rate' for n in field_names[len(field_rate_names):]])
+    names.extend(['Field ' + str(i) for i in range(len(names), len(field_shapes))])
+    rate_names.extend([n + ' Rate' for n in names[len(rate_names):]])
     hdrs = ['Heartbeat', 'Tag']
-    for field_len, name, name_rate in zip(field_shapes, field_names, field_rate_names):
+    for field_len, name, name_rate in zip(field_shapes, names, rate_names):
         if field_len == 1:
             hdrs.append(str(name))
         else:
@@ -80,11 +80,11 @@ def get_log_record(hbr: HeartbeatRecord, time_norm: HeartbeatFieldCount=None,
     field_norms : List[HeartbeatFieldCount], optional
         The normalization factor for user-specified fields' `val`, `glbl`, `wndw`, and `inst`
         values.
-        The entire parameter or individual list elements may be `None`.
+        The entire parameter or individual elements may be `None`.
     field_rate_norms : List[HeartbeatFieldRate], optional
         The normalization factor for user-specified fields' `glbl_rate`, `wndw_rate`, and
         `inst_rate` values.
-        The entire parameter or individual list elements may be `None`.
+        The entire parameter or individual elements may be `None`.
 
     Returns
     -------
@@ -132,11 +132,11 @@ def get_log_records(hbt: Heartbeat, count: int=None, time_norm: HeartbeatFieldCo
     field_norms : List[HeartbeatFieldCount], optional
         The normalization factor for user-specified fields' `val`, `glbl`, `wndw`, and `inst`
         values.
-        The entire parameter or individual list elements may be `None`.
+        The entire parameter or individual elements may be `None`.
     field_rate_norms : List[HeartbeatFieldRate], optional
         The normalization factor for user-specified fields' `glbl_rate`, `wndw_rate`, and
         `inst_rate` values.
-        The entire parameter or individual list elements may be `None`.
+        The entire parameter or individual elements may be `None`.
 
     Returns
     -------
