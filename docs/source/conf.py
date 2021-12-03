@@ -10,6 +10,7 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import configparser
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
@@ -21,8 +22,14 @@ project = 'Application Heartbeats'
 copyright = '2021, Connor Imes'
 author = 'Connor Imes'
 
+def get_version():
+    """Get version from project's setup.cfg."""
+    config = configparser.ConfigParser()
+    config.read(os.path.join('..', '..', 'setup.cfg'))
+    return config['metadata']['version']
+
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
+release = get_version()
 
 
 # -- General configuration ---------------------------------------------------
