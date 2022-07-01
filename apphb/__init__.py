@@ -1,7 +1,7 @@
 """An application-level heartbeats interface."""
 import dataclasses
 from dataclasses import dataclass
-from typing import List, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 #: Type for heartbeat field record `val` field.
 HeartbeatFieldValue = Union[Tuple[int], Tuple[float], Tuple[int, int], Tuple[float, float]]
@@ -39,8 +39,8 @@ class HeartbeatFieldRecord:
 
     # NOTE: using 'HeartbeatFieldRecord' as type hint b/c Python doesn't currently support forward
     #       references in type hints.
-    def copy(self, norm: HeartbeatFieldCount=None, rate_norm: HeartbeatFieldRate=None) -> \
-        'HeartbeatFieldRecord':
+    def copy(self, norm: Optional[HeartbeatFieldCount]=None,
+             rate_norm: Optional[HeartbeatFieldRate]=None) -> 'HeartbeatFieldRecord':
         """
         Create a copy, optionally by normalizing values, counts, and rates.
 
@@ -132,7 +132,8 @@ class Heartbeat:
         ``fields_shape=(1, 2)``.
     """
 
-    def __init__(self, window_size: int, time_shape: int=1, fields_shape: Tuple[int, ...]=None):
+    def __init__(self, window_size: int, time_shape: int=1,
+                 fields_shape: Optional[Tuple[int, ...]]=None):
         """
         Initialize a heartbeat instance.
         """
@@ -176,7 +177,7 @@ class Heartbeat:
         curr.time.inst_rate = 1 / curr.time.inst
 
     def heartbeat(self, tag: HeartbeatIdentifier, time: HeartbeatFieldValue,
-                  fields: Tuple[HeartbeatFieldValue, ...]=None):
+                  fields: Optional[Tuple[HeartbeatFieldValue, ...]]=None):
         """
         Issue a heartbeat.
 
@@ -215,22 +216,22 @@ class Heartbeat:
         self._buffer_idx = (self._buffer_idx + 1) % len(self._window_buffer)
 
     @property
-    def count(self):
+    def count(self) -> int:
         """int: The heartbeat count."""
         return self._counter
 
     @property
-    def window_size(self):
+    def window_size(self) -> int:
         """int: The window size."""
         return len(self._window_buffer)
 
     @property
-    def time_shape(self):
+    def time_shape(self) -> int:
         """int: The time shape."""
         return self._time_shape
 
     @property
-    def fields_shape(self):
+    def fields_shape(self) -> Tuple[int, ...]:
         """Tuple[int, ...]: The fields shape."""
         return self._fields_shape
 
@@ -272,7 +273,7 @@ class Heartbeat:
         hbr = self._window_buffer[self._to_buffer_index(off)]
         return hbr.time if fld is None else hbr.field_records[fld]
 
-    def get_value(self, off: int=0, fld: int=None) -> HeartbeatFieldValue:
+    def get_value(self, off: int=0, fld: Optional[int]=None) -> HeartbeatFieldValue:
         """
         Get a heartbeat field value.
 
@@ -293,7 +294,7 @@ class Heartbeat:
         hbfr = self._to_field_record(off, fld)
         return hbfr.val
 
-    def get_global_count(self, off: int=0, fld: int=None) -> HeartbeatFieldCount:
+    def get_global_count(self, off: int=0, fld: Optional[int]=None) -> HeartbeatFieldCount:
         """
         Get a heartbeat field global count.
 
@@ -314,7 +315,7 @@ class Heartbeat:
         hbfr = self._to_field_record(off, fld)
         return hbfr.glbl
 
-    def get_window_count(self, off: int=0, fld: int=None) -> HeartbeatFieldCount:
+    def get_window_count(self, off: int=0, fld: Optional[int]=None) -> HeartbeatFieldCount:
         """
         Get a heartbeat field window count.
 
@@ -335,7 +336,7 @@ class Heartbeat:
         hbfr = self._to_field_record(off, fld)
         return hbfr.wndw
 
-    def get_instant_count(self, off: int=0, fld: int=None) -> HeartbeatFieldCount:
+    def get_instant_count(self, off: int=0, fld: Optional[int]=None) -> HeartbeatFieldCount:
         """
         Get a heartbeat field instant count.
 
@@ -356,7 +357,7 @@ class Heartbeat:
         hbfr = self._to_field_record(off, fld)
         return hbfr.inst
 
-    def get_global_rate(self, off: int=0, fld: int=None) -> HeartbeatFieldRate:
+    def get_global_rate(self, off: int=0, fld: Optional[int]=None) -> HeartbeatFieldRate:
         """
         Get a heartbeat field global rate.
 
@@ -377,7 +378,7 @@ class Heartbeat:
         hbfr = self._to_field_record(off, fld)
         return hbfr.glbl_rate
 
-    def get_window_rate(self, off: int=0, fld: int=None) -> HeartbeatFieldRate:
+    def get_window_rate(self, off: int=0, fld: Optional[int]=None) -> HeartbeatFieldRate:
         """
         Get a heartbeat field window rate.
 
@@ -398,7 +399,7 @@ class Heartbeat:
         hbfr = self._to_field_record(off, fld)
         return hbfr.wndw_rate
 
-    def get_instant_rate(self, off: int=0, fld: int=None) -> HeartbeatFieldRate:
+    def get_instant_rate(self, off: int=0, fld: Optional[int]=None) -> HeartbeatFieldRate:
         """
         Get a heartbeat field instant rate.
 

@@ -1,11 +1,12 @@
 """Heartbeat logging utilities."""
 import dataclasses
-from typing import List
+from typing import List, Optional
 from apphb import Heartbeat, HeartbeatFieldCount, HeartbeatFieldRate, HeartbeatRecord, \
                   HeartbeatRecordData
 
 def get_log_header(hbt: Heartbeat, time_name: str='Time', heartrate_name: str='Heart Rate',
-                   field_names: List[str]=None, field_rate_names: List[str]=None) -> List[str]:
+                   field_names: Optional[List[str]]=None,
+                   field_rate_names: Optional[List[str]]=None) -> List[str]:
     """
     Get a heartbeat header for logging.
 
@@ -61,10 +62,11 @@ def get_log_header(hbt: Heartbeat, time_name: str='Time', heartrate_name: str='H
                 hdrs.append(prefix + ' ' + suffix)
     return hdrs
 
-def get_log_record(hbr: HeartbeatRecord, time_norm: HeartbeatFieldCount=None,
-                   heartrate_norm: HeartbeatFieldRate=None,
-                   field_norms: List[HeartbeatFieldCount]=None,
-                   field_rate_norms: List[HeartbeatFieldRate]=None) -> List[HeartbeatRecordData]:
+def get_log_record(hbr: HeartbeatRecord, time_norm: Optional[HeartbeatFieldCount]=None,
+                   heartrate_norm: Optional[HeartbeatFieldRate]=None,
+                   field_norms: Optional[List[HeartbeatFieldCount]]=None,
+                   field_rate_norms: Optional[List[HeartbeatFieldRate]]=None) \
+    -> List[HeartbeatRecordData]:
     """
     Get a heartbeat record for logging.
 
@@ -109,10 +111,11 @@ def get_log_record(hbr: HeartbeatRecord, time_norm: HeartbeatFieldCount=None,
     return values
 
 # pylint: disable=R0913
-def get_log_records(hbt: Heartbeat, count: int=None, time_norm: HeartbeatFieldCount=None,
-                    heartrate_norm: HeartbeatFieldRate=None,
-                    field_norms: List[HeartbeatFieldCount]=None,
-                    field_rate_norms: List[HeartbeatFieldRate]=None) -> \
+def get_log_records(hbt: Heartbeat, count: Optional[int]=None,
+                    time_norm: Optional[HeartbeatFieldCount]=None,
+                    heartrate_norm: Optional[HeartbeatFieldRate]=None,
+                    field_norms: Optional[List[HeartbeatFieldCount]]=None,
+                    field_rate_norms: Optional[List[HeartbeatFieldRate]]=None) -> \
     List[List[HeartbeatRecordData]]:
     """
     Get heartbeat records for logging.
