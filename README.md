@@ -13,6 +13,12 @@ The `apphb` package is published in the Python Package Index and installable wit
 pip install apphb
 ```
 
+and through Conda Forge:
+
+```sh
+conda install energymon
+```
+
 To install from source:
 
 ```sh
