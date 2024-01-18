@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Explicit `.readthedocs.yaml` config file, now required by RTD.
 
+### Fixed
+- README: conda package installation command
+
 
 ## [0.1.1] - 2023-06-21
 

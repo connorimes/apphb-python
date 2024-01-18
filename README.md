@@ -16,7 +16,7 @@ pip install apphb
 and through Conda Forge:
 
 ```sh
-conda install energymon
+conda install apphb
 ```
 
 To install from source:
