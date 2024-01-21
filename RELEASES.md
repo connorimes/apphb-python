@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Broaden `HeartbeatFieldValue` type to allow both `int` and `float` values in the same tuple.
 - Accept more abstract `Sequence` types (rather than strict `List` types) in `logging` functions.
+- Project metadata now specified entirely in `pyproject.toml`, requiring `setuptools >= 61.0.0`.
 
 ### Fixed
 - README: conda package installation command.

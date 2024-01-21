@@ -23,12 +23,14 @@ copyright = '2021-2024, Connor Imes'
 author = 'Connor Imes'
 
 def get_version():
-    """Get version from project's setup.cfg."""
-    config = configparser.ConfigParser()
-    config.read(os.path.join('..', '..', 'setup.cfg'))
-    return config['metadata']['version']
+    # This is pretty hacky, but toml parsing isn't built into all Python versions we support.
+    with open('../../pyproject.toml') as pyp:
+        lines = pyp.readlines()
+    for line in lines:
+        if line.startswith('version'):
+            return line.split('=')[-1].strip().replace('"', '')
+    raise RuntimeError('Failed to parse version from pyproject.toml')
 
-# The full version, including alpha/beta/rc tags
 release = get_version()
 
 

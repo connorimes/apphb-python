@@ -1,6 +1,26 @@
 [build-system]
 requires = [
-  "setuptools >= 42.0.0",
-  "wheel",
+  "setuptools >= 61.0.0",
+  "setuptools-scm",
 ]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "apphb"
+version = "0.1.1"
+authors = [
+    {name = "Connor Imes"},
+]
+description = "Application heartbeats"
+readme = "README.md"
+requires-python = ">=3.7"
+keywords = ["heartbeats", "profiling"]
+license = { file = "LICENSE" }
+classifiers = [
+    "Topic :: System :: Monitoring",
+    "Topic :: Utilities",
+]
+
+[project.urls]
+Homepage = "https://github.com/libheartbeats/apphb-python"
+Issues = "https://github.com/libheartbeats/apphb-python/issues"
