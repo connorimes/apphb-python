@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple, Union
 
 #: Type for heartbeat field record `val` field.
-HeartbeatFieldValue = Union[Tuple[int], Tuple[float], Tuple[int, int], Tuple[float, float]]
+HeartbeatFieldValue = Union[Tuple[Union[int, float]], Tuple[Union[int, float], Union[int, float]]]
 #: Type for heartbeat field record `glbl`, `wndw`, and `inst` fields.
 HeartbeatFieldCount = Union[int, float]
 #: Type for heartbeat field record `glbl_rate`, `wndw_rate`, and `inst_rate` fields.

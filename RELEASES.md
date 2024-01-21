@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Explicit `.readthedocs.yaml` config file, now required by RTD.
 
+### Changed
+- Broaden `HeartbeatFieldValue` type to allow both `int` and `float` values in the same tuple.
+
 ### Fixed
 - README: conda package installation command.
 - examples: `field_with_normalization` using old keyword arguments for `logging.get_log_records`.
