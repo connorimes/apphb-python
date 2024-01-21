@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- PEP-561 `py.typed` stub file.
 - Explicit `.readthedocs.yaml` config file, now required by RTD.
 
 ### Changed
