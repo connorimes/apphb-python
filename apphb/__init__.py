@@ -58,7 +58,8 @@ class HeartbeatFieldRecord:
         """
         copy = dataclasses.replace(self)
         if norm is not None:
-            copy.val = tuple(v * norm for v in copy.val)
+            # mypy limitation: https://github.com/python/mypy/issues/7509#issuecomment-639451288
+            copy.val = tuple(v * norm for v in copy.val) # type: ignore
             copy.glbl *= norm
             copy.wndw *= norm
             copy.inst *= norm
