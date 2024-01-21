@@ -93,7 +93,7 @@ def get_log_record(hbr: HeartbeatRecord, time_norm: Optional[HeartbeatFieldCount
     List[HeartbeatRecordData]
         The heartbeat record data.
     """
-    values = [hbr.ident, hbr.tag]
+    values: List[HeartbeatRecordData] = [hbr.ident, hbr.tag]
     norm = [time_norm]
     rate_norm = [heartrate_norm]
     if field_norms is not None:
