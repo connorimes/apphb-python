@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Explicit `.readthedocs.yaml` config file, now required by RTD.
 
 ### Fixed
-- README: conda package installation command
+- README: conda package installation command.
+- examples: `field_with_normalization` using old keyword arguments for `logging.get_log_records`.
 
 
 ## [0.1.1] - 2023-06-21

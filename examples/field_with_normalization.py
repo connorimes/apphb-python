@@ -47,8 +47,9 @@ def run():
         hbt.heartbeat(tag, (end_time_ns - start_time_ns,), fields=((start_uj, end_uj),))
         with open(hbt_log, 'a', encoding="utf8") as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-            rec = logging.get_log_records(hbt, count=1, norm=[1/1000000, 1/1000],
-                                          rate_norm=[1000000000, 1000])[0]
+            rec = logging.get_log_records(hbt, count=1, time_norm=1/1000000,
+                                          heartrate_norm=1000000000, field_norms=[1/1000],
+                                          field_rate_norms=[1000])[0]
             writer.writerow(rec)
 
 
