@@ -1,12 +1,12 @@
 """Heartbeat logging utilities."""
 import dataclasses
-from typing import List, Optional
+from typing import List, Optional, Sequence
 from apphb import Heartbeat, HeartbeatFieldCount, HeartbeatFieldRate, HeartbeatRecord, \
                   HeartbeatRecordData
 
 def get_log_header(hbt: Heartbeat, time_name: str='Time', heartrate_name: str='Heart Rate',
-                   field_names: Optional[List[str]]=None,
-                   field_rate_names: Optional[List[str]]=None) -> List[str]:
+                   field_names: Optional[Sequence[str]]=None,
+                   field_rate_names: Optional[Sequence[str]]=None) -> List[str]:
     """
     Get a heartbeat header for logging.
 
@@ -30,9 +30,9 @@ def get_log_header(hbt: Heartbeat, time_name: str='Time', heartrate_name: str='H
         Custom name for the `time` field, e.g., to specify units.
     heartrate_name : str, optional
         Custom name for the heartrate (rates for the `time` field), e.g., to specify units.
-    field_names : List[str], optional
+    field_names : Sequence[str], optional
         Names for user-specified fields.
-    field_rate_names : List[str], optional
+    field_rate_names : Sequence[str], optional
         Rate names for user-specified fields.
         If not specified, the corresponding field name is used with 'Rate' appended to it.
         If ``len(field_rate_names) < len(field_names)``, 'Rate' is appended to remaining names.
@@ -64,8 +64,8 @@ def get_log_header(hbt: Heartbeat, time_name: str='Time', heartrate_name: str='H
 
 def get_log_record(hbr: HeartbeatRecord, time_norm: Optional[HeartbeatFieldCount]=None,
                    heartrate_norm: Optional[HeartbeatFieldRate]=None,
-                   field_norms: Optional[List[HeartbeatFieldCount]]=None,
-                   field_rate_norms: Optional[List[HeartbeatFieldRate]]=None) \
+                   field_norms: Optional[Sequence[HeartbeatFieldCount]]=None,
+                   field_rate_norms: Optional[Sequence[HeartbeatFieldRate]]=None) \
     -> List[HeartbeatRecordData]:
     """
     Get a heartbeat record for logging.
@@ -79,11 +79,11 @@ def get_log_record(hbr: HeartbeatRecord, time_norm: Optional[HeartbeatFieldCount
     heartrate_norm : HeartbeatFieldRate, optional
         The normalization factor for the `time` field's `glbl_rate`, `wndw_rate`, and `inst_rate`
         values.
-    field_norms : List[HeartbeatFieldCount], optional
+    field_norms : Sequence[HeartbeatFieldCount], optional
         The normalization factor for user-specified fields' `val`, `glbl`, `wndw`, and `inst`
         values.
         The entire parameter or individual elements may be `None`.
-    field_rate_norms : List[HeartbeatFieldRate], optional
+    field_rate_norms : Sequence[HeartbeatFieldRate], optional
         The normalization factor for user-specified fields' `glbl_rate`, `wndw_rate`, and
         `inst_rate` values.
         The entire parameter or individual elements may be `None`.
@@ -114,8 +114,8 @@ def get_log_record(hbr: HeartbeatRecord, time_norm: Optional[HeartbeatFieldCount
 def get_log_records(hbt: Heartbeat, count: Optional[int]=None,
                     time_norm: Optional[HeartbeatFieldCount]=None,
                     heartrate_norm: Optional[HeartbeatFieldRate]=None,
-                    field_norms: Optional[List[HeartbeatFieldCount]]=None,
-                    field_rate_norms: Optional[List[HeartbeatFieldRate]]=None) -> \
+                    field_norms: Optional[Sequence[HeartbeatFieldCount]]=None,
+                    field_rate_norms: Optional[Sequence[HeartbeatFieldRate]]=None) -> \
     List[List[HeartbeatRecordData]]:
     """
     Get heartbeat records for logging.
@@ -132,11 +132,11 @@ def get_log_records(hbt: Heartbeat, count: Optional[int]=None,
     heartrate_norm : HeartbeatFieldRate, optional
         The normalization factor for the `time` field's `glbl_rate`, `wndw_rate`, and `inst_rate`
         values.
-    field_norms : List[HeartbeatFieldCount], optional
+    field_norms : Sequence[HeartbeatFieldCount], optional
         The normalization factor for user-specified fields' `val`, `glbl`, `wndw`, and `inst`
         values.
         The entire parameter or individual elements may be `None`.
-    field_rate_norms : List[HeartbeatFieldRate], optional
+    field_rate_norms : Sequence[HeartbeatFieldRate], optional
         The normalization factor for user-specified fields' `glbl_rate`, `wndw_rate`, and
         `inst_rate` values.
         The entire parameter or individual elements may be `None`.
